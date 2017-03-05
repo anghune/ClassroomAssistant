@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="bottom_tab">#F9F9F9</color>
+    <color name="bottom_tab_textcolor">#959595</color>
+    <color name="bottom_tab_textcolor_focues">@color/colorPrimary</color>
+
+    <color name="common_divider">#d9d9d9</color>
+
+
+</resources>

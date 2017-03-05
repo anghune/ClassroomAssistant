@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ClassroomAssistant</string>
+
+    <string name="tab_assistant">助手</string>
+    <string name="tab_letter">校信</string>
+    <string name="tab_curriculum">课表</string>
+    <string name="tab_myself">我</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

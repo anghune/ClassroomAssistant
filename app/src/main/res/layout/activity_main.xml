@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lzp.classroomassistant.mainpages.MainActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bottom_tab"
+        android:layout_gravity="bottom"
+        android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/common_divider"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_height"
+            android:background="@color/bottom_tab"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:id="@+id/tab_curriculum"
+                android:gravity="center"
+                android:drawableTop="@drawable/tab_curriculum_bg"
+                android:text="@string/tab_curriculum"
+                android:textSize="@dimen/tab_title_text_size"
+                android:textColor="@color/tab_text_color"
+
+                />
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:id="@+id/tab_letter"
+                android:checked="false"
+                android:drawableTop="@drawable/tab_letter_bg"
+                android:text="@string/tab_letter"
+                android:gravity="center"
+                android:textColor="@color/tab_text_color"
+                android:textSize="@dimen/tab_title_text_size"
+                />
+
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:id="@+id/tab_assistant"
+                android:checked="false"
+                android:drawableTop="@drawable/tab_assistant_bg"
+                android:text="@string/tab_assistant"
+                android:textColor="@color/tab_text_color"
+                android:gravity="center"
+                android:textSize="@dimen/tab_title_text_size"
+                />
+            <RadioButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:id="@+id/tab_personal"
+                android:checked="false"
+                android:drawableTop="@drawable/tab_personal_bg"
+                android:text="@string/tab_myself"
+                android:textColor="@color/tab_text_color"
+                android:gravity="center"
+                android:textSize="@dimen/tab_title_text_size"
+                />
+
+        </RadioGroup>
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/tab_vp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginBottom="@dimen/bottom_height"/>
+
+
+</FrameLayout>
