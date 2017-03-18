@@ -3,6 +3,7 @@ package com.lzp.classroomassistant.mainpages;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.RadioButton;
 
@@ -26,6 +27,8 @@ public class MainActivity extends BaseActivity implements MainContract.View{
     RadioButton mTabPersonal;
     @InjectView(R.id.tab_vp)
     ViewPager mTabViewPager;
+    @InjectView(R.id.main_toolbar)
+    Toolbar mToolbar;
 
 
     @OnClick({R.id.tab_curriculum,R.id.tab_letter,R.id.tab_assistant,R.id.tab_personal})
@@ -70,8 +73,11 @@ public class MainActivity extends BaseActivity implements MainContract.View{
 //        mPresenter.setRadioButton(0,radioButtons);
         mPresenter.initFragmentList(radioButtons);
 
+        setSupportActionBar(mToolbar);
 
     }
+
+
 
     @Override
     public void setViewpager(ArrayList<Fragment> fragments, final RadioButton[] radioButtons) {
