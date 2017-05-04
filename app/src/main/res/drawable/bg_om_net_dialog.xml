@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!-- 渐变 默认的模式为android:type="linear"线性，android:type="radial"半径，android: type="sweep"
+             android:angle="0" 从左到右  逆时针
+ <gradient
+ android:startColor="@color/white"
+ android:endColor="#D5D5D5"
+ android:angle="90" />
+        -->
+    <!-- 填充  -->
+    <solid android:color="#bf000000" />
+    <!--描边 <stroke
+    android:width="0.5dp"
+    android:color="#D5D5D5" /> -->
+    <!-- 圆角   -->
+    <corners
+        android:bottomLeftRadius="8dp"
+        android:bottomRightRadius="8dp"
+        android:topLeftRadius="8dp"
+        android:topRightRadius="8dp" />
+</shape>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="1dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+<RelativeLayout
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="10dp">
+
+    <TextView
+        android:id="@+id/courseNameTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="应用系统架构"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"/>
+    <TextView
+        android:id="@+id/isSelectTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_light"
+        android:layout_alignParentRight="true"
+        android:textColor="@android:color/white"
+        android:padding="2dp"
+        android:text="添加到课表"/>
+
+    <TextView
+        android:id="@+id/classroomTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="教室：3212"
+        android:layout_below="@+id/courseNameTxtId"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/courseTimeTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="时间：周四7-8节"
+        android:layout_below="@+id/classroomTxtId"
+        android:layout_marginTop="6dp"/>
+
+    <TextView
+        android:id="@+id/teacherTxtId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="教室：金正恩"
+        android:layout_below="@+id/courseTimeTxtId"
+        android:layout_marginTop="6dp"/>
+
+
+</RelativeLayout>
+</android.support.v7.widget.CardView>

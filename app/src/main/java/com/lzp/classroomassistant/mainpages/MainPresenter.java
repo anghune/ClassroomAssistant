@@ -3,6 +3,10 @@ package com.lzp.classroomassistant.mainpages;
 import android.support.v4.app.Fragment;
 import android.widget.RadioButton;
 
+import com.lzp.classroomassistant.assistant.AssistantFragment;
+import com.lzp.classroomassistant.message.MessageFragment;
+import com.lzp.classroomassistant.presonal.MineFragment;
+
 import java.util.ArrayList;
 
 /**
@@ -25,10 +29,10 @@ public class MainPresenter implements MainContract.Presenter{
     @Override
     public void initFragmentList(RadioButton[] radioButtons) {
         ArrayList<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new BlankFragment());
-        fragmentList.add(new BlankFragment());
-        fragmentList.add(new BlankFragment());
-        fragmentList.add(new BlankFragment());
+        fragmentList.add(new MainFragment());
+        fragmentList.add(new MessageFragment());
+        fragmentList.add(new AssistantFragment());
+        fragmentList.add(new MineFragment());
         mainView.setViewpager(fragmentList,radioButtons);
 
 

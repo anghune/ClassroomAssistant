@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.lzp.classroomassistant.mainpages.common.SelectSeatActivity"
+    android:weightSum="1">
+
+
+    <include layout="@layout/toolbar_layout"
+             android:id="@+id/include"/>
+    <RelativeLayout
+        android:id="@+id/topLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_below="@+id/include"
+        android:layout_alignParentStart="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/courseNameTxtId"
+            android:text="@string/course_name"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"/>
+        <TextView
+            android:id="@+id/roomTxtId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/courseNameTxtId"
+            android:text="@string/classroom"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"/>
+        <TextView
+            android:id="@+id/sectionTxtId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/section"
+            android:textSize="16sp"
+            android:layout_below="@+id/roomTxtId"
+            android:layout_marginTop="8dp"/>
+        <TextView
+            android:id="@+id/weekTimeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/weeks"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:layout_below="@+id/sectionTxtId"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/headerImageId"
+            android:src="@drawable/icon_head"
+            android:layout_alignParentRight="true"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_margin="10dp"/>
+        <TextView
+            android:id="@+id/teacherTxtId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/weekTimeId"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:textSize="16sp"
+            android:text="@string/teacher"/>
+
+    </RelativeLayout>
+
+
+        <com.lzp.classroomassistant.view.SeatTable
+            android:id="@+id/seatView"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/topLinear"
+            android:layout_height="360dp"/>
+
+
+    <Button
+        android:id="@+id/sureBtnId"
+        android:background="@drawable/btn_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:text="@string/suer_seat"
+        android:layout_below="@+id/seatView"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="20sp" />
+
+
+</RelativeLayout>

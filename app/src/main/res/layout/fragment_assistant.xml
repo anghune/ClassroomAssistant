@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.lzp.classroomassistant.assistant.AssistantFragment">
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="1dp"
+        android:clickable="true"
+        android:id="@+id/titleCardId"
+        android:foreground="?android:attr/selectableItemBackground">
+        <TextView
+            android:text="@string/assistant_title"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        </android.support.v7.widget.CardView>
+
+    <Button
+        android:id="@+id/noticeBtnId"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:paddingTop="10dp"
+        android:drawableTop="@drawable/icon_notice"
+        android:gravity="center"
+        android:text="@string/assistant_notice"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_blue"
+        android:layout_below="@+id/titleCardId"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:id="@+id/fileBtnId"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:paddingTop="10dp"
+        android:drawableTop="@drawable/icon_file"
+        android:gravity="center"
+        android:text="@string/file_cloud"
+        android:textColor="@color/white"
+        android:background="@drawable/btn_blue"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_below="@+id/titleCardId"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

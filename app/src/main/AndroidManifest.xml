@@ -2,18 +2,99 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.lzp.classroomassistant">
 
+    <!-- 允许联网 -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 获取GSM（2g）、WCDMA（联通3g）等网络状态的信息 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <!-- 获取wifi网络状态的信息 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 获取sd卡写的权限，用于文件上传和下载 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <!-- 允许读取手机状态 用于创建BmobInstallation -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <!-- 摄像头 -->
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- 录音 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- 通知震动 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="Bmob_APP_KEY"
+            android:value="59a0369c13cac71a2b3ada12c9bfd59c"/>
+
         <activity android:name=".mainpages.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".mainpages.common.AddCourseActivity">
+        </activity>
+        <activity android:name=".login.LoginActivity">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN"/> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".login.RegisterActivity">
+        </activity>
+        <activity android:name=".login.SchoolActivity">
+        </activity>
+        <activity android:name=".mainpages.common.SelectSeatActivity">
+        </activity>
+        <activity android:name=".mainpages.common.CheckActivity">
+        </activity>
+        <activity android:name=".presonal.common.AddMemberActivity">
+        </activity>
+        <activity android:name=".message.OrganActivity">
+        </activity>
+        <activity android:name=".message.ChatActivity">
+        </activity>
+
+        <receiver android:name="cn.bmob.newim.core.ConnectChangeReceiver">
+            <intent-filter>
+                <action android:name="cn.bmob.action.RECONNECT"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="cn.bmob.newim.core.service.BmobIMService"
+            android:process=":bmobcore"/>
+        <service
+            android:name="cn.bmob.newim.core.service.NotifyService"
+            android:process=":bmobcore"/>
+        <service android:name="cn.bmob.newim.core.service.ReConnectService"/>
+        <service android:name="cn.bmob.newim.core.service.HeartBeatService"/>
+
+        <activity android:name=".assistant.notice.NoticeActivity">
+        </activity>
+        <activity android:name=".assistant.notice.CreateNoticeActivity">
+        </activity>
+        <activity android:name=".assistant.notice.AddReceiverActivity">
+        </activity>
+        <activity android:name=".assistant.courseware.FileActivity">
+        </activity>
+        <activity android:name=".assistant.courseware.AddFileActivity">
         </activity>
     </application>
 

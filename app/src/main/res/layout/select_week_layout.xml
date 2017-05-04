@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="1dp"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+<RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <Spinner
+            android:id="@+id/weekSpinerId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/SpinnerItem"
+            android:layout_marginTop="5dp"
+            android:spinnerMode="dialog"
+            android:background="@null"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/gradetxtId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/weekSpinerId"
+            android:text="@string/grade"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:layout_alignLeft="@+id/weekSpinerId"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/termTxtId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/term"
+            android:layout_below="@+id/weekSpinerId"
+            android:layout_alignRight="@+id/weekSpinerId"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/addImageId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add"
+            android:layout_alignParentRight="true"
+            android:tint="@android:color/darker_gray"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"/>
+        <!--<View-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@drawable/dropshadow_toolbar"/>-->
+</RelativeLayout>
+
+</android.support.v7.widget.CardView>
+
+

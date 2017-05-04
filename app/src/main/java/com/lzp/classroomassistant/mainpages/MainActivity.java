@@ -1,19 +1,32 @@
 package com.lzp.classroomassistant.mainpages;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
 
 import com.lzp.classroomassistant.BaseActivity;
 import com.lzp.classroomassistant.R;
+import com.lzp.classroomassistant.data.User;
+import com.lzp.classroomassistant.event.RefreshEvent;
+import com.lzp.classroomassistant.login.LoginActivity;
+import com.lzp.classroomassistant.mainpages.common.ViewPagerAdapter;
+import com.lzp.classroomassistant.util.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import butterknife.InjectView;
 import butterknife.OnClick;
+import cn.bmob.newim.BmobIM;
+import cn.bmob.newim.bean.BmobIMUserInfo;
+import cn.bmob.newim.listener.ConnectListener;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
 
 public class MainActivity extends BaseActivity implements MainContract.View{
 
@@ -27,8 +40,8 @@ public class MainActivity extends BaseActivity implements MainContract.View{
     RadioButton mTabPersonal;
     @InjectView(R.id.tab_vp)
     ViewPager mTabViewPager;
-    @InjectView(R.id.main_toolbar)
-    Toolbar mToolbar;
+
+    private static final String TAG = "MainActivity";
 
 
     @OnClick({R.id.tab_curriculum,R.id.tab_letter,R.id.tab_assistant,R.id.tab_personal})
@@ -62,6 +75,7 @@ public class MainActivity extends BaseActivity implements MainContract.View{
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
+
         mPresenter = new MainPresenter(this);
         RadioButton[] radioButtons = {
                 mTabCurriculum,
@@ -72,11 +86,47 @@ public class MainActivity extends BaseActivity implements MainContract.View{
 
 //        mPresenter.setRadioButton(0,radioButtons);
         mPresenter.initFragmentList(radioButtons);
-
-        setSupportActionBar(mToolbar);
-
+        autoLogin();
+        connectIM();
     }
 
+    private void autoLogin(){
+        User user =  BmobUser.getCurrentUser(User.class);
+        if(user != null){
+            // 允许用户使用应用
+            String name = user.getName();
+            BmobIM.getInstance().updateUserInfo(new BmobIMUserInfo(user.getObjectId(), user.getUsername(), user.getAvatar()));
+            ToastUtil.showToast(name + " 你好，自动登录成功!");
+        }else{
+            //缓存用户对象为空时， 可打开用户注册界面…
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private void connectIM(){
+        User user = BmobUser.getCurrentUser(User.class);
+        BmobIM.connect(user.getObjectId(), new ConnectListener() {
+            @Override
+            public void done(String uid, BmobException e) {
+                if (e == null) {
+                    Log.i(TAG,"connect success");
+                    //服务器连接成功就发送一个更新事件，同步更新会话及主页的小红点
+                    EventBus.getDefault().post(new RefreshEvent());
+                } else {
+                    Log.e(TAG,e.getErrorCode() + "/" + e.getMessage());
+                }
+            }
+        });
+        //监听连接状态，也可通过BmobIM.getInstance().getCurrentStatus()来获取当前的长连接状态
+//        BmobIM.getInstance().setOnConnectStatusChangeListener(new ConnectStatusChangeListener() {
+//            @Override
+//            public void onChange(ConnectionStatus var1) {
+//
+//            }
+//        });
+    }
 
 
     @Override
@@ -128,6 +178,5 @@ public class MainActivity extends BaseActivity implements MainContract.View{
         }else {
             mTabViewPager.setCurrentItem(current-1,true);
         }
-
     }
 }
