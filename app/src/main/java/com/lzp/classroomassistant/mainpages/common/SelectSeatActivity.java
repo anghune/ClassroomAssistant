@@ -144,23 +144,24 @@ public class SelectSeatActivity extends BaseActivity {
             public boolean isSold(int row, int column) {
 
                         int size = appData.getSeatList().size();
-                        for (int i = 0;i < size; i++){
-                            Seat seat = appData.getSeatList().get(i);
-                            if (row == seat.getRow() && column == seat.getColumn()){
-                                if (!seat.getStudent().getUsername().equals(mUser.getUsername())){
-                                    mSeatTableView.setSoldName(seat.getStudent().getName());
-                                    Log.d("wang"," id " + seat.getStudent().getUsername());
-                                    return true;
-                                } else {
-                                    Log.d("wang"," else id " + seat.toString());
-                                    mSeatTableView.addChooseSeat(row,column);
-                                    mSeatTableView.invalidate();
-                                    setBtnEnable(row , column);
-                                    return false;
+                        if (size >= 0 ){
+                            for (int i = 0;i < size; i++){
+                                Seat seat = appData.getSeatList().get(i);
+                                if (row == seat.getRow() && column == seat.getColumn()){
+                                    if (!seat.getStudent().getUsername().equals(mUser.getUsername())){
+                                        mSeatTableView.setSoldName(seat.getStudent().getName());
+                                        Log.d("wang"," id " + seat.getStudent().getUsername());
+                                        return true;
+                                    } else {
+                                        Log.d("wang"," else id " + seat.toString());
+                                        mSeatTableView.addChooseSeat(row,column);
+                                        mSeatTableView.invalidate();
+                                        setBtnEnable(row , column);
+                                        return false;
+                                    }
                                 }
                             }
                         }
-
                 return false;
             }
 

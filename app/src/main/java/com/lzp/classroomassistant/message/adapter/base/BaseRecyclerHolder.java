@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.lzp.classroomassistant.net.ImageLoaderFactory;
+import com.lzp.classroomassistant.util.PicassoUtils;
 
 
 /**
@@ -118,7 +118,8 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
      */
     public BaseRecyclerHolder setImageView(String avatar, int defaultRes, int viewId) {
         ImageView iv = getView(viewId);
-        ImageLoaderFactory.getLoader().loadAvator(iv,avatar, defaultRes);
+//        ImageLoaderFactory.getLoader().loadAvator(iv,avatar, defaultRes);
+        PicassoUtils.loadImage(avatar,iv, defaultRes);
         return this;
     }
 }

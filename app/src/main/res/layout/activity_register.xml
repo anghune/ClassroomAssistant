@@ -52,14 +52,15 @@
             android:layout_marginRight="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <EditText
                 android:id="@+id/edit_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableRight="@drawable/icon_clear"
                 android:hint="@string/name"
-                android:textSize="16sp"
                 android:inputType="textShortMessage"
-                android:drawableRight="@drawable/icon_clear"/>
+                android:textSize="16sp"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_marginTop="10dp"

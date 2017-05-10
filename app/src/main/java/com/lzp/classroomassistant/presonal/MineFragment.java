@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.lzp.classroomassistant.BaseFragment;
@@ -22,6 +21,8 @@ import com.lzp.classroomassistant.net.SubscriberOnNextListener;
 import com.lzp.classroomassistant.presonal.common.AddMemberActivity;
 import com.lzp.classroomassistant.util.AlertDialogUtil;
 import com.lzp.classroomassistant.util.Constant;
+import com.lzp.classroomassistant.util.PicassoUtils;
+import com.lzp.classroomassistant.util.PopupMenuUtil;
 import com.lzp.classroomassistant.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.UpdateListener;
+import de.hdodenhof.circleimageview.CircleImageView;
 import rx.Observable;
 
 import static com.lzp.classroomassistant.R.id.expandableListView;
@@ -52,10 +54,13 @@ public class MineFragment extends BaseFragment implements GroupExpandAdapter.Lis
     TextView mMumberTxt;
     @InjectView(R.id.userCollegeTxt)
     TextView mCollegeTxt;
+    @InjectView(R.id.headerImageId)
+    CircleImageView mAvatar;
 
     private ArrayList<ArrayList<User>> mMemberList = new ArrayList<>();
     private ArrayList<Organization> mOrganList = new ArrayList<>();
     private GroupExpandAdapter mGroupExpandAdapter;
+    private static final String TAG = "MineFragment";
 
     @OnClick({R.id.exitBtn,R.id.creatOrgan})
     void onClick(View view){
@@ -88,6 +93,13 @@ public class MineFragment extends BaseFragment implements GroupExpandAdapter.Lis
         mNameTxt.setText(String.format(getString(R.string.info_name),user.getName()));
         mMumberTxt.setText(String.format(getString(R.string.info_mumber),user.getUsername()));
         mCollegeTxt.setText(String.format(getString(R.string.info_college),user.getCollege()));
+        String avatar = user.getAvatar();
+        if (avatar != null){
+            Log.d(TAG, " avatar = " + avatar);
+//            ImageLoaderFactory.getLoader().loadAvator(mAvatar,user != null ? user.getAvatar() : null, R.drawable.icon_head);
+            PicassoUtils.loadImage(avatar, mAvatar, R.drawable.icon_head);
+
+        }
     }
 
     @Override
@@ -173,10 +185,7 @@ public class MineFragment extends BaseFragment implements GroupExpandAdapter.Lis
 
     @Override
     public void onClickMore(View view, final int groupPosition) {
-        PopupMenu popupMenu = new PopupMenu(getActivity(),view);
-        popupMenu.getMenuInflater()
-                .inflate(R.menu.group_menu,popupMenu.getMenu());
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        PopupMenuUtil.showPopupMenu(R.menu.group_menu, getActivity(), view, new PopupMenuUtil.ItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
@@ -192,7 +201,26 @@ public class MineFragment extends BaseFragment implements GroupExpandAdapter.Lis
                 return true;
             }
         });
-        popupMenu.show();
+//        PopupMenu popupMenu = new PopupMenu(getActivity(),view);
+//        popupMenu.getMenuInflater()
+//                .inflate(R.menu.group_menu,popupMenu.getMenu());
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                switch (item.getItemId()){
+//                    case R.id.delete:
+//                        AlertDialogUtil.showDialog(getActivity(), "是否移除该组织", new AlertDialogUtil.AlertDialogListener() {
+//                            @Override
+//                            public void sureOnClick() {
+//                                removeGroup(groupPosition);
+//                            }
+//                        });
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
+//        popupMenu.show();
     }
 
     private void removeGroup(int groupId){

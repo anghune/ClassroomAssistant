@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.lzp.classroomassistant.R;
 import com.lzp.classroomassistant.data.Organization;
 import com.lzp.classroomassistant.data.User;
+import com.lzp.classroomassistant.util.PicassoUtils;
 
 import java.util.ArrayList;
 
@@ -101,8 +102,10 @@ public class GroupExpandAdapter extends BaseExpandableListAdapter {
             viewHolder = new ChildViewHolder(convertView);
             convertView.setTag(viewHolder);
         }
-        viewHolder.mNameTxt.setText(mMemberList.get(groupPosition).get(childPosition).getName());
-        viewHolder.mMemberId.setText(mMemberList.get(groupPosition).get(childPosition).getUsername());
+        User user = mMemberList.get(groupPosition).get(childPosition);
+        viewHolder.mNameTxt.setText(user.getName());
+        viewHolder.mMemberId.setText(user.getUsername());
+        PicassoUtils.loadImage(user.getAvatar(),viewHolder.mHeadImage,R.drawable.icon_head);
         return convertView;
     }
 

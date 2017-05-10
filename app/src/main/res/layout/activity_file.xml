@@ -6,9 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/base_bg"
+    android:id="@+id/linearLayout"
     tools:context="com.lzp.classroomassistant.assistant.courseware.FileActivity">
     <include layout="@layout/toolbar_layout"/>
 
     <include layout="@layout/refresh_recycler_layout"/>
+
+
 
 </LinearLayout>

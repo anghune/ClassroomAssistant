@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.lzp.classroomassistant.R;
 import com.lzp.classroomassistant.data.UserOrgan;
+import com.lzp.classroomassistant.util.PicassoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,32 +42,33 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Vi
 
     @Override
     public void onBindViewHolder(final MemberListAdapter.ViewHolder holder, final int position) {
-        holder.mNameTxt.setText(mUserList.get(position).getUserName().getName());
-        holder.mMemberIdTxt.setText(mUserList.get(position).getUserName().getUsername());
-        holder.mCheckBox.setTag(mUserList.get(position));
+        final UserOrgan userOrgan = mUserList.get(position);
+        holder.mNameTxt.setText(userOrgan.getUserName().getName());
+        holder.mMemberIdTxt.setText(userOrgan.getUserName().getUsername());
+        holder.mCheckBox.setTag(userOrgan);
         if (mCheckList.size()!= 0){
-            holder.mCheckBox.setChecked(mCheckList.contains(mUserList.get(position)));
+            holder.mCheckBox.setChecked(mCheckList.contains(userOrgan));
         } else {
             holder.mCheckBox.setChecked(false);
         }
 
-
+        PicassoUtils.loadImage(userOrgan.getUserName().getAvatar(),holder.mAvatarImage,R.drawable.icon_head);
         holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     Log.d(" 确定 选择 ","  " + isChecked);
-                    if (buttonView.getTag().equals(mUserList.get(position))
-                            && !mCheckList.contains(mUserList.get(position))){
-                        mCheckList.add(mUserList.get(position));
-                        Log.d("确定 选择 ",mUserList.get(position).getUserName().getName());
+                    if (buttonView.getTag().equals(userOrgan)
+                            && !mCheckList.contains(userOrgan)){
+                        mCheckList.add(userOrgan);
+                        Log.d("确定 选择 ",userOrgan.getUserName().getName());
                     }
                 } else {
                     Log.d(" 取消 选择 ","  " + isChecked);
-                    if (buttonView.getTag().equals(mUserList.get(position))
-                            && mCheckList.contains(mUserList.get(position))){
-                        mCheckList.remove(mUserList.get(position));
-                        Log.d("取消选择 ", mUserList.get(position).getUserName().getName());
+                    if (buttonView.getTag().equals(userOrgan)
+                            && mCheckList.contains(userOrgan)){
+                        mCheckList.remove(userOrgan);
+                        Log.d("取消选择 ", userOrgan.getUserName().getName());
                     }
                 }
             }
@@ -103,7 +105,7 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Vi
         @InjectView(R.id.addMemberCheckBox)
         CheckBox mCheckBox;
         @InjectView(R.id.headerImageId)
-        CircleImageView mCircleImageView;
+        CircleImageView mAvatarImage;
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.inject(this, itemView);

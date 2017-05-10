@@ -11,13 +11,20 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatarImageId"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="8dp"
+            />
         <TextView
             android:id="@+id/nameTxtId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="重庆邮电大学"
-            android:layout_marginLeft="20dp"
-            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/avatarImageId"
+            android:layout_centerVertical="true"
             android:textSize="16sp"/>
         <TextView
             android:id="@+id/munberTxtId"
@@ -25,9 +32,30 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="重庆邮电大学"
-            android:layout_marginRight="20dp"
-            android:padding="10dp"
+            android:layout_marginRight="100dp"
+            android:layout_centerVertical="true"
             android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/resultImageId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_sure"
+            android:tint="@color/colorPrimary"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="50dp"
+            android:visibility="invisible"/>
+        <ImageView
+            android:id="@+id/moreImageId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_more"
+            android:tint="@color/colorPrimary"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:paddingEnd="5dp"/>
 
     </RelativeLayout>
 

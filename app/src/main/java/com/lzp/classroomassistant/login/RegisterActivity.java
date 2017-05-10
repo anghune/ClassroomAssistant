@@ -1,8 +1,15 @@
 package com.lzp.classroomassistant.login;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Process;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,11 +25,18 @@ import com.lzp.classroomassistant.data.UserOrgan;
 import com.lzp.classroomassistant.util.Constant;
 import com.lzp.classroomassistant.util.ToastUtil;
 
+import java.io.File;
+
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.OnTouch;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UploadFileListener;
+
+import static com.lzp.classroomassistant.R.id.userNumberEditId;
+import static com.lzp.classroomassistant.util.Constant.PERMISSIONS_REQUEST_CAMERA;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -32,7 +46,7 @@ public class RegisterActivity extends BaseActivity {
     TextView mCollegeTxt;
     @InjectView(R.id.edit_username)
     EditText mNameEdit;
-    @InjectView(R.id.userNumberEditId)
+    @InjectView(userNumberEditId)
     EditText mNumberEdit;
     @InjectView(R.id.edit_pass)
     EditText mPassEdit;
@@ -43,8 +57,17 @@ public class RegisterActivity extends BaseActivity {
     @InjectView(R.id.radio_teacher)
     RadioButton mTeacherRadio;
 
-    private Integer userType = 1;
 
+    private Integer userType = 1;
+    // 拍照得到的照片文件
+    private File mPictureFile;
+    private Uri mCameraTempUri;
+
+//    private String mLocalAvatar;
+//    private File mTmpFile;
+
+
+    private static final String TAG = "RegisterActivity";
     @OnClick({R.id.schoolTxtId,R.id.collegeTxtId,R.id.registerBtnId})
     void onClick(View view){
         switch (view.getId()){
@@ -58,25 +81,26 @@ public class RegisterActivity extends BaseActivity {
 
             case R.id.registerBtnId:
                     registe();
-                break;
 
+                break;
             default:
                 break;
         }
     }
-    @OnTouch({R.id.edit_username,R.id.userNumberEditId})
+    @OnTouch({R.id.edit_username, userNumberEditId})
     boolean onTouch(View view, MotionEvent motionEvent){
         switch (view.getId()){
             case R.id.edit_username:
                 clearEditText(mNameEdit,motionEvent);
                 break;
-            case R.id.userNumberEditId:
+            case userNumberEditId:
                 clearEditText(mNumberEdit,motionEvent);
                 break;
 
         }
         return false;
     }
+
 
 
 
@@ -87,9 +111,11 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     protected void initViews(Bundle savedInstanceState) {
-
+        requestPermission();
         addListener();
     }
+
+
 
     private void startSchoolActivity(int type){
         Intent intent = new Intent(RegisterActivity.this,SchoolActivity.class);
@@ -115,7 +141,7 @@ public class RegisterActivity extends BaseActivity {
     private void registe(){
         if(mSchoolTxt.getText().toString().equals("学校")|| mCollegeTxt.getText().toString().equals("院系")
                 || mNumberEdit.getText().toString().isEmpty() || mNumberEdit.getText().toString().isEmpty()
-                || mPassEdit.getText().toString().isEmpty()){
+                || mPassEdit.getText().toString().isEmpty() ){
             ToastUtil.showToast("请填写完整信息!");
         } else {
             String school = mSchoolTxt.getText().toString().replace("学校:","");
@@ -127,44 +153,99 @@ public class RegisterActivity extends BaseActivity {
             final User user = new User(school,college,name,userType);
             user.setUsername(number);
             user.setPassword(pass);
-            user.signUp(new SaveListener<User>() {
-                @Override
-                public void done(User s, BmobException e) {
-                    if(e==null){
-                        UserOrgan userOrgan = new UserOrgan();
-                        userOrgan.setUserName(s);
-                        userOrgan.save(new SaveListener<String>() {
-                            @Override
-                            public void done(String s, BmobException e) {
-                                if (e == null){
-                                    ToastUtil.showToast(user.getName()+" 注册成功! 请登录" );
-                                    finish();
-                                }
-                            }
-                        });
-                    }else{
-                        if (e.getErrorCode() == 202){
-                            ToastUtil.showToast(user.getName()+" 用户名已经存在 " );
-                        }
+            signUp(user);
+
+
+        }
+    }
+
+    private void signUp(final User user){
+        user.signUp(new SaveListener<User>() {
+            @Override
+            public void done(User s, BmobException e) {
+                if(e==null){
+                    s.setPassword(mPassEdit.getText().toString());
+                    autoLogin(s);
+                }else{
+                    if (e.getErrorCode() == 202){
+                        ToastUtil.showToast(user.getName()+" 学号已经存在 " );
                     }
                 }
-            });
-//            Observable<User> observable = user.signUpObservable(User.class);
-//            HttpManager.toSubscribe(observable,new ProgressSubscriber<User>(new SubscriberOnNextListener<User>() {
-//                @Override
-//                public void onNext(User  e) {
-//                    if(e == null){
-//                        ToastUtil.showToast("注册成功:");
-//                        finish();
-//                    }else{
-////                        if (e.getErrorCode() == 202){
-//                            ToastUtil.showToast(user.getUsername() + " 学号/工号已注册！" );
-////                        }
-//                    }
-//                }
-//            }));
+            }
+        });
+    }
+    private void setUserOrgan(User user){
+        UserOrgan userOrgan = new UserOrgan();
+        userOrgan.setUserName(user);
+        userOrgan.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e == null){
+                    Log.d(TAG," 设置组织成功!");
+                } else {
+                    Log.d(TAG, e.getMessage().toString());
+                }
+            }
+        });
+    }
+    private void autoLogin(User user){
+        user.login(new SaveListener<User>() {
+            @Override
+            public void done(User user, BmobException e) {
+                if (e == null) {
+                    ToastUtil.showToast(" 登录成功,请设置头像 ");
+                    setUserOrgan(user);
+                    startCameraActivity();
+
+                } else {
+                    if (e.getErrorCode() == 101){
+                        ToastUtil.showToast(" 用户名或密码不正确 ");
+                    } else {
+                        ToastUtil.showToast(" 登录失败 ");
+                        Log.d(TAG, e.getMessage().toString());
+
+                    }
+                }
+            }
+        });
+    }
+
+    private void requestPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED ){
+            //申请CAMERA权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA,Manifest.permission.READ_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST_CAMERA);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            //申请WRITE_EXTERNAL_STORAGE权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST_CAMERA);
         }
 
+    }
+
+    private void startCameraActivity(){
+        Intent intent = new Intent(RegisterActivity.this, CameraActivity.class);
+        intent.putExtra(Constant.KEY,Constant.REQUEST_CAMERA_IMAGE);
+        startActivity(intent);
+        finish();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSIONS_REQUEST_CAMERA) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission Granted
+                ToastUtil.showToast("授权成功!");
+            } else {
+                // Permission Denied
+                Process.killProcess(Process.myPid());
+            }
+        }
     }
 
     @Override
@@ -193,4 +274,22 @@ public class RegisterActivity extends BaseActivity {
         }
         return true;
     }
+
+    private void setAvatar(String path, final User user){
+        final BmobFile bmobFile = new BmobFile(mNameEdit.getText().toString(),"Avatar",path);
+        bmobFile.uploadblock(new UploadFileListener() {
+            @Override
+            public void done(BmobException e) {
+                if (e == null){
+                    user.setAvatar(bmobFile.getFileUrl());
+                    signUp(user);
+                } else {
+                    Log.d(TAG, e.getMessage());
+                }
+            }
+        });
+    }
+
+
+
 }

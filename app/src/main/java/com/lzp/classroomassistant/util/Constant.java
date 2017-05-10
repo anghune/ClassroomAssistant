@@ -22,5 +22,18 @@ public final class Constant {
     public static final int CODE_ADD_MEMBER = 104;
     public static final int CODE_ADD_RECEIVER = 105;
     public static final int CODE_SEND_NOTICE = 106;
+    public static final int REQUEST_CAMERA_IMAGE = 107;
+    public static final int PERMISSIONS_REQUEST_CAMERA = 108;
+    public static final int REQUEST_FACE_RECOGINTION = 109;
+    public static final int SEND_FACE_RECOGNITION = 0;
+    public static final int UNCHECK_FACE_RECOGNITION = 1;
+    public static final int CHECK_FACE_RECOGNITION = 2;
+
+    public static final String UNCHECK_CLASS = "未签到的";
+    public static final String CHECK_CLASS = "已签到的";
+
+
+
+
 
 }

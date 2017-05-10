@@ -2,6 +2,7 @@ package com.lzp.classroomassistant;
 
 import com.lzp.classroomassistant.data.College;
 import com.lzp.classroomassistant.data.Course;
+import com.lzp.classroomassistant.data.FaceRecogni;
 import com.lzp.classroomassistant.data.Organization;
 import com.lzp.classroomassistant.data.School;
 import com.lzp.classroomassistant.data.Seat;
@@ -32,7 +33,16 @@ public class AppData {
     private List<UserOrgan> mUserOrganList;
     private List<Organization> mOrganizationList;
     private ArrayList<ArrayList<User>> mMemberList;
+    private FaceRecogni mFaceRecogni;
 
+
+    public FaceRecogni getFaceRecogni() {
+        return mFaceRecogni;
+    }
+
+    public void setFaceRecogni(FaceRecogni faceRecogni) {
+        mFaceRecogni = faceRecogni;
+    }
 
     public ArrayList<ArrayList<User>> getMemberList() {
         return mMemberList;

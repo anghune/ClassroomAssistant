@@ -5,17 +5,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.lzp.classroomassistant.BaseActivity;
 import com.lzp.classroomassistant.R;
 import com.lzp.classroomassistant.data.Course;
+import com.lzp.classroomassistant.data.FaceRecogni;
 import com.lzp.classroomassistant.data.Seat;
 import com.lzp.classroomassistant.data.User;
+import com.lzp.classroomassistant.message.TitleItemDecoration;
 import com.lzp.classroomassistant.net.HttpManager;
 import com.lzp.classroomassistant.net.ProgressSubscriber;
 import com.lzp.classroomassistant.net.SubscriberOnNextListener;
 import com.lzp.classroomassistant.util.Constant;
-import com.lzp.classroomassistant.view.CheckTitleItemDecoration;
+import com.lzp.classroomassistant.util.PopupMenuUtil;
+import com.lzp.classroomassistant.util.ToastUtil;
 import com.lzp.classroomassistant.view.DividerItemDecoration;
 
 import java.util.ArrayList;
@@ -23,10 +28,14 @@ import java.util.List;
 
 import butterknife.InjectView;
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 import rx.Observable;
 
-public class CheckActivity extends BaseActivity {
+public class CheckActivity extends BaseActivity implements CheckListAdapter.Listener{
 
     @InjectView(R.id.checkRecycleId)
     RecyclerView mRecyclerView;
@@ -36,9 +45,10 @@ public class CheckActivity extends BaseActivity {
     private List<String> mNames = new ArrayList<>();
     private int mDivider;
     private CheckListAdapter mCheckListAdapter;
-    private CheckTitleItemDecoration mTitleItemDecoration;
+    private TitleItemDecoration mTitleItemDecoration;
     private DividerItemDecoration mDividerItemDecoration;
     private Course mCourse;
+    private static final String TAG = "CheckActivity";
     @Override
     protected int getLayoutView() {
         return R.layout.activity_check;
@@ -71,42 +81,30 @@ public class CheckActivity extends BaseActivity {
         HttpManager.toSubscribe(observable,new ProgressSubscriber<List<User>>(new SubscriberOnNextListener<List<User>>() {
             @Override
             public void onNext(List<User> list) {
-                mUsers.addAll(list);
+//                mUsers.addAll(list);
                 for (User user: list){
+                    user.setOrgan(Constant.UNCHECK_CLASS);
+                    mUsers.add(user);
                     Log.d("wang","没有签到的人 " + user.getName());
                 }
                 mDivider = list.size();
                 Log.d("wang","签到分隔符  "+ mDivider);
                 if (appData.getSeatList().size()!= 0){
                     for (Seat seat: appData.getSeatList()){
-                        mUsers.add(seat.getStudent());
+                        User user = seat.getStudent();
+                        user.setOrgan(Constant.CHECK_CLASS);
+                        getFaceRecogResult(user);
+                        mUsers.add(user);
                     }
                 }
-                mTitleItemDecoration = new CheckTitleItemDecoration(CheckActivity.this,(ArrayList<User>) mUsers, mDivider);
-                mCheckListAdapter = new CheckListAdapter(mUsers);
+                mTitleItemDecoration = new TitleItemDecoration(CheckActivity.this,(ArrayList<User>) mUsers);
+                mCheckListAdapter = new CheckListAdapter(mUsers,CheckActivity.this);
                 mRecyclerView.setAdapter(mCheckListAdapter);
                 mRecyclerView.addItemDecoration(mTitleItemDecoration);
                 mRecyclerView.addItemDecoration(mDividerItemDecoration);
 
             }
         }));
-
-
-//        final Observable observable = query.findObjectsByTableObservable();
-//        HttpManager.toSubscribe(observable, new ProgressSubscriber<JSONArray>(new SubscriberOnNextListener<JSONArray>() {
-//            @Override
-//            public void onNext(JSONArray jsonArray) {
-//                Gson gson = new Gson();
-//                if (!jsonArray.toString().isEmpty()){
-//                    List<Seat> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<Seat>>(){}.getType());
-//                    for (Seat seat: list){
-////                    mUsers.add(seat.getStudent());
-//                        mNames.add(seat.getStudent().getUsername());
-//                    }
-//                }
-//                addUser();
-//            }
-//        },this));
 
     }
     private void loadCheckedUser(){
@@ -127,5 +125,50 @@ public class CheckActivity extends BaseActivity {
             }
         },this));
 
+    }
+
+    private void getFaceRecogResult(final User user){
+        BmobQuery<FaceRecogni> query = new BmobQuery<>();
+        query.include("teacher,student,course");
+        query.addWhereEqualTo("teacher",BmobUser.getCurrentUser(User.class));
+        query.addWhereEqualTo("student",user);
+        query.addWhereEqualTo("course",mCourse);
+        query.order("-createdAt").findObjects(new FindListener<FaceRecogni>() {
+            @Override
+            public void done(List<FaceRecogni> list, BmobException e) {
+                if (e == null){
+                    user.setResult(list.get(0).getResult());
+                    mCheckListAdapter.notifyDataSetChanged();
+                } else {
+                    Log.d(TAG,e.getMessage().toString());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onClickMore(View view, final int pos) {
+        PopupMenuUtil.showPopupMenu(R.menu.check_menu, this, view, new PopupMenuUtil.ItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.faceMenu:
+                        FaceRecogni faceRecogni = new FaceRecogni(BmobUser.getCurrentUser(User.class),
+                                mCourse,mUsers.get(pos),Constant.SEND_FACE_RECOGNITION);
+                        faceRecogni.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e == null){
+                                    ToastUtil.showToast("给 "+mUsers.get(pos).getName()+" 发送人脸识别成功！");
+                                }else {
+                                    Log.d("Wang",e.getMessage().toString());
+                                }
+                            }
+                        });
+                        break;
+                }
+                return true;
+            }
+        });
     }
 }

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.lzp.classroomassistant.R;
 import com.lzp.classroomassistant.data.User;
 import com.lzp.classroomassistant.message.adapter.base.BaseViewHolder;
-import com.lzp.classroomassistant.net.ImageLoaderFactory;
+import com.lzp.classroomassistant.util.PicassoUtils;
 
 import java.text.SimpleDateFormat;
 
@@ -58,8 +58,9 @@ public class ReceiveVoiceHolder extends BaseViewHolder {
     BmobIMMessage msg = (BmobIMMessage)o;
     //用户信息的获取必须在buildFromDB之前，否则会报错'Entity is detached from DAO context'
     final BmobIMUserInfo info = msg.getBmobIMUserInfo();
-    ImageLoaderFactory.getLoader().loadAvator(iv_avatar,info != null ? info.getAvatar() : null, R.drawable.head);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+//    ImageLoaderFactory.getLoader().loadAvator(iv_avatar,info != null ? info.getAvatar() : null, R.drawable.head);
+      PicassoUtils.loadImage(info.getAvatar(),iv_avatar,R.drawable.icon_head);
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
     String time = dateFormat.format(msg.getCreateTime());
     tv_time.setText(time);
     iv_avatar.setOnClickListener(new View.OnClickListener() {

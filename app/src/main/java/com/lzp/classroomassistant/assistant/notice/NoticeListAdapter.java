@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.lzp.classroomassistant.R;
 import com.lzp.classroomassistant.data.NoticeMember;
+import com.lzp.classroomassistant.util.PicassoUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -68,6 +69,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 mListener.itemOnClick(v,position);
             }
         });
+        PicassoUtils.loadImage(member.getMember().getAvatar(),holder.mAvatarImage,R.drawable.icon_head);
     }
 
     private String pareDateString(String s){

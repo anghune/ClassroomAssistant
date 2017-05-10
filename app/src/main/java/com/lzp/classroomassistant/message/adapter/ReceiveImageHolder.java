@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.lzp.classroomassistant.R;
 import com.lzp.classroomassistant.message.adapter.base.BaseViewHolder;
 import com.lzp.classroomassistant.net.ImageLoaderFactory;
+import com.lzp.classroomassistant.util.PicassoUtils;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
@@ -46,14 +47,15 @@ public class ReceiveImageHolder extends BaseViewHolder {
     BmobIMMessage msg = (BmobIMMessage)o;
     //用户信息的获取必须在buildFromDB之前，否则会报错'Entity is detached from DAO context'
     final BmobIMUserInfo info = msg.getBmobIMUserInfo();
-    ImageLoaderFactory.getLoader().loadAvator(iv_avatar,info != null ? info.getAvatar() : null, R.drawable.head);
+//    ImageLoaderFactory.getLoader().loadAvator(iv_avatar,info != null ? info.getAvatar() : null, R.drawable.head);
+    PicassoUtils.loadImage(info.getAvatar(),iv_avatar,R.drawable.icon_head);
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
     String time = dateFormat.format(msg.getCreateTime());
     tv_time.setText(time);
     //可使用buildFromDB方法转化为指定类型的消息
     final BmobIMImageMessage message = BmobIMImageMessage.buildFromDB(false,msg);
     //显示图片
-    ImageLoaderFactory.getLoader().load(iv_picture,message.getRemoteUrl(),  R.mipmap.ic_launcher,new ImageLoadingListener(){;
+    ImageLoaderFactory.getLoader().load(iv_picture,message.getRemoteUrl(),  R.mipmap.icon_app,new ImageLoadingListener(){;
 
     @Override
       public void onLoadingStarted(String s, View view) {

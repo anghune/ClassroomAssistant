@@ -1,11 +1,17 @@
 package com.lzp.classroomassistant.util;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.hardware.Camera;
+import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.util.Log;
 
 import com.lzp.classroomassistant.data.User;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,6 +24,7 @@ import cn.bmob.v3.BmobUser;
  */
 public class Utils {
 
+    private static final String TAG = "Utils";
     public static int getCourseBgColor(int colorFlag) {
         switch (colorFlag) {
             case 0:
@@ -264,6 +271,84 @@ public class Utils {
             return true;
         else
             return false;
+    }
+
+    public static String[] getPath(Context context, Uri uri) {
+            String[] info = new String[3];
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = { "_data",OpenableColumns.DISPLAY_NAME,OpenableColumns.SIZE };
+            Cursor cursor = null;
+
+            try {
+                cursor = context.getContentResolver().query(uri, projection,null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow("_data");
+                int nameIndex = cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME);
+                int sizeIndex = cursor.getColumnIndexOrThrow(OpenableColumns.SIZE);
+                if (cursor.moveToFirst()) {
+                    info[0] = cursor.getString(column_index);
+                    info[1] = cursor.getString(nameIndex);
+                    info[2] = FormentFileSize(cursor.getLong(sizeIndex));
+                    Log.i(TAG," name " + cursor.getString(nameIndex) + " size  "+ cursor.getString(sizeIndex));
+                    return info;
+                }
+            } catch (Exception e) {
+                // Eat it
+            }
+        }
+//        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+//            return uri.getPath();
+//        }
+        return null;
+    }
+
+
+    public static String getFilePath(Context context, Uri uri){
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = { "_data" };
+            Cursor cursor = null;
+
+            try {
+                cursor = context.getContentResolver().query(uri, projection,null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow("_data");
+                if (cursor.moveToFirst()) {
+
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+                // Eat it
+            }
+        }
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+        return null;
+    }
+
+    /**
+     * 转换文件大小
+     * */
+    public static String FormentFileSize(long fileS) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        String fileSizeString = "";
+        if (fileS < 1024) {
+            fileSizeString = df.format((double) fileS) + "B";
+        } else if (fileS < 1048576) {
+            fileSizeString = df.format((double) fileS / 1024) + "K";
+        } else if (fileS < 1073741824) {
+            fileSizeString = df.format((double) fileS / 1048576) + "M";
+        } else {
+            fileSizeString = df.format((double) fileS / 1073741824) + "G";
+        }
+        return fileSizeString;
+    }
+
+    public static void followScreenOrientation(Context context, Camera camera){
+        final int orientation = context.getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            camera.setDisplayOrientation(180);
+        }else if(orientation == Configuration.ORIENTATION_PORTRAIT) {
+            camera.setDisplayOrientation(270);
+        }
     }
 
 }

@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +38,8 @@ import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import rx.Observable;
 
 import static com.lzp.classroomassistant.net.HttpManager.toSubscribe;
@@ -50,6 +54,10 @@ public class MainFragment extends BaseFragment {
     LinearLayout weekNames;
     @InjectView(R.id.sections)
     LinearLayout sections;
+    @InjectView(R.id.refreshId)
+    SwipeRefreshLayout mRefreshLayout;
+    @InjectView(R.id.containerLayout)
+    LinearLayout mContainerLayout;
     @InjectViews({R.id.weekPanel_1, R.id.weekPanel_2, R.id.weekPanel_3, R.id.weekPanel_4,
             R.id.weekPanel_5, R.id.weekPanel_6, R.id.weekPanel_7})
     List<LinearLayout> mWeekViews;
@@ -59,6 +67,7 @@ public class MainFragment extends BaseFragment {
     private int itemHeight;
     private int maxSection = 12;
     private final int mResultCode = 100;
+    private SwipeRefreshLayout.OnRefreshListener mOnRefreshListener;
     private static final String TAG = "MainFragment";
 
     @OnClick({R.id.addImageId})
@@ -88,13 +97,36 @@ public class MainFragment extends BaseFragment {
     protected void initViews(Bundle savedInstanceState) {
         itemHeight = getResources().getDimensionPixelSize(R.dimen.sectionHeight);
 
-//        autoLogin();
-//        connectIM();
         initWeekNameView();
         initSectionView();
-//        loadData(mUserType);
-        loadCourse();
+        initSwipeLayout();
 
+    }
+
+    private void initSwipeLayout() {
+        mRefreshLayout.setEnabled(true);
+        mRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        mContainerLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mContainerLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                mRefreshLayout.setRefreshing(true);
+                //自动刷新
+               loadCourse();
+            }
+        });
+        //下拉加载
+        mOnRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadCourse();
+            }
+        };
+        mRefreshLayout.setOnRefreshListener(mOnRefreshListener);
     }
 
 
@@ -120,15 +152,25 @@ public class MainFragment extends BaseFragment {
         User user = BmobUser.getCurrentUser(User.class);
         query.include("teacher");
         query.addWhereRelatedTo("courses", new BmobPointer(user));
-        final Observable observable = query.findObjectsObservable(Course.class);
-        toSubscribe(observable,new ProgressSubscriber<List<Course>>(new SubscriberOnNextListener<List<Course>>() {
+        query.findObjects(new FindListener<Course>() {
             @Override
-            public void onNext(List<Course> list) {
+            public void done(List<Course> list, BmobException e) {
+                mRefreshLayout.setRefreshing(false);
                 appData.setCourseList(list);
                 clearChildView();
                 initWeekCourseView(filtData(list));
             }
-        },mContext));
+        });
+//        final Observable observable = query.findObjectsObservable(Course.class);
+//        toSubscribe(observable,new ProgressSubscriber<List<Course>>(new SubscriberOnNextListener<List<Course>>() {
+//            @Override
+//            public void onNext(List<Course> list) {
+//                mRefreshLayout.setRefreshing(false);
+//                appData.setCourseList(list);
+//                clearChildView();
+//                initWeekCourseView(filtData(list));
+//            }
+//        },mContext));
     }
 
 

@@ -8,6 +8,7 @@
 
     <string name="grade">大四</string>
     <string name="term">第二学期</string>
+    <string name="xfyun_id">=590d4be1</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -16,6 +17,7 @@
     <string name="teacher">老师%1$6s</string>
     <string name="login_school">学校:%1$6s</string>
     <string name="registe_college">院系:%1$6s</string>
+    <string name="registe_avatar">头像:%1$6s</string>
     <string name="course_name">课程%1$6s</string>
     <string name="section">节数%1$6s</string>
     <string name="top_name">前面是%1$s同学</string>
@@ -54,6 +56,7 @@
     <string name="file_cloud">云课件</string>
     <string name="create_notice_title">新建云通知</string>
 
+    <string name="avatar">头像</string>
     <string name="school">学校</string>
     <string name="college">院系</string>
     <string name="password">密码</string>
@@ -75,4 +78,7 @@
     <string name="select_receiver">选择接收人</string>
     <string name="file_activity_title">我的课件</string>
     <string name="add_file_act_title">添加课件</string>
+    <string name="delete">删除</string>
+    <string name="download">下载</string>
+    <string name="face_recognition">人脸识别</string>
 </resources>

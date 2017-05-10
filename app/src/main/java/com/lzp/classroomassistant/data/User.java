@@ -17,15 +17,22 @@ public class User extends BmobUser  {
     private String name;
     private Integer type; // 用户类型 1表示学生 ， 2 表示教师
     private BmobRelation courses;
-    private String organ;
+    private String organ; //用于将用户进行分类
     private String avatar;
+    private int result;// 表示人脸识别结果状态码 1：表示验证失败  2：表示验证成功
 
 
     public User() {
     }
 
 
+    public int getResult() {
+        return result;
+    }
 
+    public void setResult(int result) {
+        this.result = result;
+    }
 
     public String getAvatar() {
         return avatar;

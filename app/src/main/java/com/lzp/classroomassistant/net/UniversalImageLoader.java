@@ -26,11 +26,12 @@ public class UniversalImageLoader implements ILoader{
 
     @Override
     public void loadAvator(ImageView iv, String url, int defaultRes) {
-        if(!TextUtils.isEmpty(url)){
+/*        if(!TextUtils.isEmpty(url)){
             display(iv,url,true,defaultRes,null);
         } else {
             iv.setImageResource(defaultRes);
-        }
+        }*/
+//        PicassoUtils.loadImage(url, iv, R.drawable.icon_head);
     }
 
     @Override
